@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\admin\OfferController;
+use App\Http\Controllers\Api\admin\FeatureController;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,7 @@ use App\Http\Controllers\Api\admin\SliderController;
 |
 */
 Route::apiResource('offer', OfferController::class);
+Route::apiResource('features', FeatureController::class);
 
 Route::group(['prefix' => 'auth'],function () {
     Route::post('login', [AuthController::class, 'login']);
