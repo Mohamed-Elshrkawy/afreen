@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\admin\OfferController;
 use App\Http\Controllers\Api\admin\FeatureController;
+use App\Http\Controllers\Api\admin\ReviewController;
+use App\Http\Controllers\Api\admin\SittingController;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,7 +27,11 @@ use App\Http\Controllers\Api\admin\SliderController;
 |
 */
 Route::apiResource('offer', OfferController::class);
-Route::apiResource('features', FeatureController::class);
+Route::apiResource('feature', FeatureController::class);
+Route::apiResource('review', ReviewController::class);
+Route::apiResource('setting', SittingController::class);
+Route::get('/newslatter',[DashboardController::class,'latterEmail']);
+
 
 Route::group(['prefix' => 'auth'],function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -40,13 +46,7 @@ Route::group([ 'middleware' => ('user_type:admin')],function(){
     Route::get('/home',[DashboardController::class,'index']);
     Route::apiResource('product', ProductController::class);
     Route::apiResource('categories', CategoriesController::class);
-    Route::post('/sliders', [SliderController::class, 'store']);
-    Route::get('/sliders', [SliderController::class, 'index']);
-    Route::post('/sliders/{id}', [SliderController::class, 'update']);
-    Route::get('/sliders/{id}', [SliderController::class, 'show']);
-    Route::delete('/sliders/{id}', [SliderController::class, 'destroy']);
-
-
+    Route::apiResource('sliders',SliderController::class);
 });
 
 
