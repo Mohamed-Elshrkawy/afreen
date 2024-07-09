@@ -1,31 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Api\admin;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\settings;
+use App\Http\Requests\SettingRequest;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 use Validator;
 
-class SittingController extends Controller
+class SettingController extends Controller
 {
     public function index()
     {
-        $setting=settings::all();
+        $setting=Setting::all();
         return response()->json($setting);
     }
-    public function store(Request $request)
+    public function store(SettingRequest $request)
     {
-
-
-        if ($request->hasFile('logo')) {
-            $image = $request->file('logo');
-            $imagePath = $image->store('logo', 'public');
-        }
-        $setting = settings::create([
-            'logo' => $imagePath,
+        $setting = Setting::create([
             'about_ar' => $request->about_ar,
             'about_en' => $request->about_en,
         ]);
@@ -39,7 +33,7 @@ class SittingController extends Controller
  */
 public function show(string $id)
 {
-    $setting = settings::find($id);
+    $setting = Setting::find($id);
     if(!$setting){
         return response()->json([
             'success' => false,
@@ -52,27 +46,9 @@ public function show(string $id)
 /**
  * Update the specified resource in storage.
  */
-public function update(Request $request, $id)
+public function update(SettingRequest $request, $id)
 {
-    $setting = Settings::find($id);
-    if (!$setting) {
-        return response()->json([
-            'success' => false,
-            'message' => 'setting not found'
-        ], 404);
-    }
-
-    if ($request->hasFile('logo')) {
-
-        if ($setting->logo) {
-            Storage::disk('public')->delete($setting->logo);
-        }
-
-        $image = $request->file('logo');
-        $imagePath = $image->store('logo', 'public');
-        $setting->logo = $imagePath;
-    }
-
+    $setting = Setting::find($id);
     $setting->about_ar = $request->about_ar ;
     $setting->about_en = $request->about_en ;
     $setting->save();
@@ -87,16 +63,12 @@ public function update(Request $request, $id)
  */
 public function destroy($id)
 {
-    $setting = Settings::find($id);
+    $setting = Setting::find($id);
     if (!$setting) {
         return response()->json([
             'success' => false,
             'message' => 'Setting not found'
         ], 404);
-    }
-
-    if ($setting->logo) {
-        Storage::disk('public')->delete($setting->logo);
     }
 
     $setting->delete();

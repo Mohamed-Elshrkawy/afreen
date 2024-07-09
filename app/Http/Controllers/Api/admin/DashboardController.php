@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\admin;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\news_latter_emails;
+use App\Models\NewLatterEmail;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -14,7 +14,7 @@ class DashboardController extends Controller
     }
     public function latterEmail()
     {
-        $email = news_latter_emails::all();
+        $email = NewLatterEmail::all();
         return response()->json($email);
     }
 }

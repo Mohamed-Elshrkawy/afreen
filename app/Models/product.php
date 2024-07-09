@@ -28,19 +28,18 @@ class Product extends Model implements TranslatableContract
         return $this->belongsTo(Category::class);
     }
 
+    public function sizes()
+    {
+        return $this->belongsToMany(Size::class);
+    }
+
     public function colors()
     {
-        return $this->belongsToMany(product_color::class);
+        return $this->belongsToMany(Color::class);
     }
 
     public function images()
     {
-        return $this->hasMany(product_image::class);
+        return $this->hasMany(ProductImage::class);
     }
-
-    public function sizes()
-    {
-        return $this->belongsToMany(product_size::class);
-    }
-
 }

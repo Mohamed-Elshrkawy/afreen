@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class news_latter_emails extends Model
+class Offer extends Model
 {
     use HasFactory;
-    protected $fillable=['email'];
+    protected $fillable = ['discount_perecentage','product_id'];
 }

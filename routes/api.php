@@ -1,19 +1,17 @@
 <?php
 
-use App\Http\Controllers\Api\admin\OfferController;
-use App\Http\Controllers\Api\admin\FeatureController;
-use App\Http\Controllers\Api\admin\ReviewController;
-use App\Http\Controllers\Api\admin\SittingController;
-use GuzzleHttp\Middleware;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Admin\OfferController;
+use App\Http\Controllers\Api\Admin\FeatureController;
+use App\Http\Controllers\Api\Admin\ReviewController;
+use App\Http\Controllers\Api\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\admin\DashboardController;
+use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\website\HomeController;
 use App\Http\Controllers\Api\website\CartController;
-use App\Http\Controllers\Api\admin\CategoriesController;
-use App\Http\Controllers\Api\admin\ProductController;
-use App\Http\Controllers\Api\admin\SliderController;
+use App\Http\Controllers\Api\Admin\CategoriesController;
+use App\Http\Controllers\Api\Admin\ProductController;
+use App\Http\Controllers\Api\Admin\SliderController;
 
 
 /*
@@ -29,8 +27,14 @@ use App\Http\Controllers\Api\admin\SliderController;
 Route::apiResource('offer', OfferController::class);
 Route::apiResource('feature', FeatureController::class);
 Route::apiResource('review', ReviewController::class);
-Route::apiResource('setting', SittingController::class);
+Route::apiResource('setting', SettingController::class);
+// Route::apiResource('about_us', AboutController::class);
 Route::get('/newslatter',[DashboardController::class,'latterEmail']);
+Route::apiResource('product', ProductController::class);
+Route::put('recommended',[ProductController::class,'changeRecommend']);
+Route::apiResource('categories', CategoriesController::class);
+
+
 
 
 Route::group(['prefix' => 'auth'],function () {
@@ -40,12 +44,10 @@ Route::group(['prefix' => 'auth'],function () {
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
 });
-Route::put('recommended',[ProductController::class,'changeRecommend']);
 
 Route::group([ 'middleware' => ('user_type:admin')],function(){
     Route::get('/home',[DashboardController::class,'index']);
-    Route::apiResource('product', ProductController::class);
-    Route::apiResource('categories', CategoriesController::class);
+
     Route::apiResource('sliders',SliderController::class);
 });
 

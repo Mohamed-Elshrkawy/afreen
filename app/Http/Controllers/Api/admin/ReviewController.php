@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\admin;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\review;
-use Illuminate\Http\Request;
+use App\Http\Requests\ReviewRequest;
+use App\Models\Review;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -15,23 +15,19 @@ class ReviewController extends Controller
      */
     public function index()
     {
-        $review =review::all();
+        $review =Review::all();
         return response()->json($review);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ReviewRequest $request)
     {
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imagePath = $image->store('review', 'public');
-        }
-        $review =review::create([
+
+        $review =Review::create([
             'name'=>$request->name,
             'review'=>$request->review,
-            'image'=>$request->image
         ]);
 
         return response()->json([
@@ -45,7 +41,7 @@ class ReviewController extends Controller
      */
     public function show(string $id)
     {
-        $review=review::find($id);
+        $review=Review::find($id);
         return response()->json([
             'success' => true,
             'data' => $review
@@ -55,19 +51,9 @@ class ReviewController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ReviewRequest $request, string $id)
     {
-        $review = review::find($id);
-        if ($request->hasFile('image')) {
-
-            if ($review->image) {
-                Storage::disk('public')->delete($review->image);
-            }
-
-            $image = $request->file('image');
-            $imagePath = $image->store('review', 'public');
-            $review->image = $imagePath;
-        }
+        $review = Review::find($id);
         $review->name = $request->name;
         $review->review =$request->review;
         $review -> save();
@@ -82,16 +68,12 @@ class ReviewController extends Controller
      */
     public function destroy(string $id)
     {
-        $review = review::find($id);
+        $review = Review::find($id);
         if (!$review) {
             return response()->json([
                 'success' => false,
                 'message' => 'review not found'
             ], 404);
-        }
-
-        if ($review->image) {
-            Storage::disk('public')->delete($review->image);
         }
 
         $review->delete();

@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\admin;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\features;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-
+use App\Http\Requests\FeatureRequest;
+use App\Models\Feature;
 
 class FeatureController extends Controller
 {
@@ -15,7 +13,7 @@ class FeatureController extends Controller
      */
     public function index()
     {
-        $feature = features::all();
+        $feature = Feature::all();
         return response()->json([
             'message' => 'feature successfully ',
             'data' => $feature
@@ -26,16 +24,12 @@ class FeatureController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(FeatureRequest $request)
     {
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imagePath = $image->store('features', 'public');
-        }
-        $feature=features::create([
-            'name'=>$request->name,
-            'description'=>$request->description,
-            'image'=>$imagePath
+
+        $feature=Feature::create([
+            'en'=>$request->en,
+            'ar'=>$request->ar,
         ]);
         return response()->json([
             'message' => 'feature created successfully ',
@@ -48,7 +42,7 @@ class FeatureController extends Controller
      */
     public function show(string $id)
     {
-        $feature =features::find($id);
+        $feature =Feature::find($id);
         return response()->json([
             'message' => 'feature successfully ',
             'data' => $feature
@@ -59,21 +53,14 @@ class FeatureController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(FeatureRequest $request, string $id)
     {
-        $feature = features::find($id);
-        if ($request->hasFile('image')) {
+        $feature = Feature::find($id);
 
-            if ($feature->image) {
-                Storage::disk('public')->delete($feature->image);
-            }
-
-            $image = $request->file('image');
-            $imagePath = $image->store('features', 'public');
-            $feature->image = $imagePath;
-        }
-
-        $feature->status = $request->status;
+        $feature->update([
+            'en'=>$request->en,
+            'ar'=>$request->ar,
+        ]);
         $feature->save();
 
         return response()->json([
@@ -87,18 +74,13 @@ class FeatureController extends Controller
      */
     public function destroy(string $id)
     {
-        $feature = features::find($id);
+        $feature = Feature::find($id);
         if (!$feature) {
             return response()->json([
                 'success' => false,
                 'message' => 'feature not found'
             ], 404);
         }
-
-        if ($feature->image) {
-            Storage::disk('public')->delete($feature->image);
-        }
-
         $feature->delete();
 
         return response()->json([
@@ -106,5 +88,5 @@ class FeatureController extends Controller
             'message' => 'feature deleted successfully'
         ]);
     }
-    
+
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\admin;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\slider;
+use App\Models\Slider;
 use Illuminate\Support\Facades\Storage;
 use Validator;
 
@@ -15,8 +15,8 @@ class SliderController extends Controller
      */
     public function index()
     {
-        $slider = slider::all();
-        return response()->json($slider);
+        $Slider = Slider::all();
+        return response()->json($Slider);
     }
 
     /**
@@ -24,43 +24,29 @@ class SliderController extends Controller
      */
         public function store(Request $request)
         {
-            $validator = Validator::make($request->all(), [
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'status' => 'required|boolean',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => $validator->errors()
-                ], 400);
-            }
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imagePath = $image->store('sliders', 'public');
-            }
-            $slider = Slider::create([
-                'image' => $imagePath,
+            $Slider = Slider::create([
                 'status' => $request->status,
+
             ]);
             return response()->json([
                 'success' => true,
-                'data' => $slider
+                'data' => $Slider
             ], 201);
+
         }
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        $slider = slider::find($id);
-        if(!$slider){
+        $Slider = Slider::find($id);
+        if(!$Slider){
             return response()->json([
                 'success' => false,
                 'message' => 'Slider not found'
             ], 404);
         }
-        return response()->json($slider);
+        return response()->json($Slider);
     }
 
     /**
@@ -68,43 +54,20 @@ class SliderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'required|boolean',
-        ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 400);
-        }
-
-        $slider = Slider::find($id);
-        if (!$slider) {
+        $Slider = Slider::find($id);
+        if (!$Slider) {
             return response()->json([
                 'success' => false,
                 'message' => 'Slider not found'
             ], 404);
         }
-
-        if ($request->hasFile('image')) {
-
-            if ($slider->image) {
-                Storage::disk('public')->delete($slider->image);
-            }
-
-            $image = $request->file('image');
-            $imagePath = $image->store('sliders', 'public');
-            $slider->image = $imagePath;
-        }
-
-        $slider->status = $request->status;
-        $slider->save();
+        $Slider->status = $request->status;
+        $Slider->save();
 
         return response()->json([
             'success' => true,
-            'data' => $slider
+            'data' => $Slider
         ]);
     }
     /**
@@ -112,19 +75,19 @@ class SliderController extends Controller
      */
     public function destroy($id)
     {
-        $slider = Slider::find($id);
-        if (!$slider) {
+        $Slider = Slider::find($id);
+        if (!$Slider) {
             return response()->json([
                 'success' => false,
                 'message' => 'Slider not found'
             ], 404);
         }
 
-        if ($slider->image) {
-            Storage::disk('public')->delete($slider->image);
+        if ($Slider->image) {
+            Storage::disk('public')->delete($Slider->image);
         }
 
-        $slider->delete();
+        $Slider->delete();
 
         return response()->json([
             'success' => true,

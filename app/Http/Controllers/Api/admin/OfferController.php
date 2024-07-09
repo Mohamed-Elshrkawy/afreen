@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\admin;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\offers;
+use App\Models\offer;
 use Illuminate\Http\Request;
 
 
@@ -14,7 +14,7 @@ class OfferController extends Controller
      */
     public function index()
     {
-        $offer = offers::all();
+        $offer = offer::all();
         return response()->json($offer , 200);
     }
 
@@ -23,7 +23,7 @@ class OfferController extends Controller
      */
     public function store(Request $request)
     {
-        $offer=offers::create([
+        $offer=offer::create([
             'discount_perecentage'=>$request->discount,
             'product_id'=>$request->product_id
         ]);
@@ -37,7 +37,7 @@ class OfferController extends Controller
      */
     public function show(string $id)
     {
-        $offer = offers::find($id);
+        $offer = offer::find($id);
 
         return response()->json([
             'message' => 'offer successfully select',
@@ -51,7 +51,7 @@ class OfferController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $offer = offers::find($id);
+        $offer = offer::find($id);
         $offer ->discount_perecentage=$request->discount;
         $offer->save();
         return response()->json([
@@ -66,7 +66,7 @@ class OfferController extends Controller
      */
     public function destroy(string $id)
     {
-        $offer = offers::find($id);
+        $offer = offer::find($id);
         $offer ->delete();
         return response()->json(null, 204);
     }

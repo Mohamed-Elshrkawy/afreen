@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class offers extends Model
+class FeatureTranslation extends Model
 {
     use HasFactory;
-    protected $fillable = ['discount_perecentage','product_id'];
+
+    public $timestamps = false;
+    protected $fillable = ['name', 'description'];
 }
