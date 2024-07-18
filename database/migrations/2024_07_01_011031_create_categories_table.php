@@ -22,7 +22,7 @@ class CreateCategoriesTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->unique(['category_id', 'locale']);
-            $table->timestamps();
+            
         });
 
     }

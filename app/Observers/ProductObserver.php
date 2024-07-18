@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Observers;
-
-use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Color;
@@ -17,7 +15,9 @@ class ProductObserver
      */
     public function created(Product $product): void
     {
+
         $request = request();
+
         $colors =$request->color;
         if ($colors){
             $color =[];
@@ -62,10 +62,6 @@ class ProductObserver
     /**
      * Handle the Product "updated" event.
      */
-    public function updated(Product $product): void
-    {
-
-    }
 
     /**
      * Handle the Product "deleted" event.

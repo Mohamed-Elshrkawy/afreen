@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('logo');
             $table->string('about_ar');
             $table->string('about_en');
-            $table->timestamps();
+            $table->string('email');
+            $table->string('address');
+            $table->string('phone');
         });
     }
 

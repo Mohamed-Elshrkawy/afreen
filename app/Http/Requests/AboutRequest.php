@@ -23,9 +23,12 @@ class AboutRequest extends FormRequest
     {
 
         return [
-            'welcome'=>'required|string|max:20',
-            'head'=>'required|string|max:50',
-            'text'=>'required|string|max:100',
+            'en.welcome'=>'required|string|max:20',
+            'en.head'=>'required|string|max:50',
+            'en.text'=>'required|string|max:100',
+            'ar.welcome'=>'required|string|max:20',
+            'ar.head'=>'required|string|max:50',
+            'ar.text'=>'required|string|max:100',
             'l_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             's_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
 

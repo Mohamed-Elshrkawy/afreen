@@ -55,19 +55,14 @@ class SliderController extends Controller
     public function update(Request $request, $id)
     {
 
-        $Slider = Slider::find($id);
-        if (!$Slider) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Slider not found'
-            ], 404);
-        }
-        $Slider->status = $request->status;
-        $Slider->save();
+        $slider=Slider::find($id);
+        $slider->update([
+            'status' => $request->status,
+        ]);
 
         return response()->json([
             'success' => true,
-            'data' => $Slider
+            'data' => $slider
         ]);
     }
     /**

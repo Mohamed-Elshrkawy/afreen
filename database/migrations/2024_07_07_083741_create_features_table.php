@@ -4,14 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCategoriesTable extends Migration
+class CreateFeaturesTable extends Migration
 {
     public function up()
     {
         Schema::create('features', function (Blueprint $table) {
             $table->id();
             $table->string('image')->nullable();
-            $table->timestamps();
         });
 
 
@@ -22,7 +21,6 @@ class CreateCategoriesTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->unique(['feature_id', 'locale']);
-            $table->timestamps();
         });
 
     }
@@ -30,7 +28,7 @@ class CreateCategoriesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('feature_translations');
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('features');
     }
 }
 

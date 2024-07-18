@@ -1,17 +1,31 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
+
+use App\Http\Controllers\Api\Admin\AboutController;
 use App\Http\Controllers\Api\Admin\OfferController;
 use App\Http\Controllers\Api\Admin\FeatureController;
 use App\Http\Controllers\Api\Admin\ReviewController;
 use App\Http\Controllers\Api\Admin\SettingController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\Admin\DashboardController;
-use App\Http\Controllers\Api\website\HomeController;
-use App\Http\Controllers\Api\website\CartController;
 use App\Http\Controllers\Api\Admin\CategoriesController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\Admin\SliderController;
+use App\Http\Controllers\Api\Admin\ServiceController;
+use App\Http\Controllers\Api\Admin\OurTeamController;
+use App\Http\Controllers\Api\Admin\CouponConrtoller;
+use App\Http\Controllers\Api\Admin\DashboardController;
+
+use App\Http\Controllers\Api\website\HomeController;
+use App\Http\Controllers\Api\website\CartController;
+use App\Http\Controllers\Api\website\BlogController;
+use App\Http\Controllers\Api\website\SingleProductController;
+use App\Http\Controllers\Api\website\AboutUsController;
+use App\Http\Controllers\Api\website\ContactUsController;
+use App\Http\Controllers\Api\website\OrderController;
+use App\Http\Controllers\Api\website\ProfileController;
+use App\Http\Controllers\Api\website\AddressController;
+
 
 
 /*
@@ -24,18 +38,16 @@ use App\Http\Controllers\Api\Admin\SliderController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::apiResource('offer', OfferController::class);
-Route::apiResource('feature', FeatureController::class);
-Route::apiResource('review', ReviewController::class);
-Route::apiResource('setting', SettingController::class);
-// Route::apiResource('about_us', AboutController::class);
-Route::get('/newslatter',[DashboardController::class,'latterEmail']);
-Route::apiResource('product', ProductController::class);
-Route::put('recommended',[ProductController::class,'changeRecommend']);
-Route::apiResource('categories', CategoriesController::class);
 
 
-
+Route::get('profile',[ProfileController::class, 'index']);
+Route::post('profile',[ProfileController::class, 'create']);
+Route::get('myordercurrent',[ProfileController::class, 'current']);
+Route::get('myordercompleted',[ProfileController::class, 'completed']);
+Route::get('myordercanceled',[ProfileController::class, 'canceled']);
+Route::get('mywallet',[ProfileController::class,'myWallet']);
+Route::get('myfavorite',[ProfileController::class,'myFavorite']);
+Route::apiResource('address', AddressController::class);
 
 Route::group(['prefix' => 'auth'],function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -46,33 +58,54 @@ Route::group(['prefix' => 'auth'],function () {
 });
 
 Route::group([ 'middleware' => ('user_type:admin')],function(){
-    Route::get('/home',[DashboardController::class,'index']);
-
+    Route::apiResource('categories', CategoriesController::class);
+    Route::apiResource('offer', OfferController::class);
+    Route::apiResource('feature', FeatureController::class);
+    Route::apiResource('review', ReviewController::class);
+    Route::apiResource('setting', SettingController::class);
+    Route::apiResource('aboutus', AboutController::class);
+    Route::apiResource('service', ServiceController::class);
+    Route::get('/newslatter',[DashboardController::class,'latterEmail']);
+    Route::apiResource('product', ProductController::class);
+    Route::put('recommended',[ProductController::class,'changeRecommend']);
     Route::apiResource('sliders',SliderController::class);
+    Route::apiResource('ourTeam',OurTeamController::class);
+    Route::apiResource('coupon',CouponConrtoller::class);
 });
 
-
 Route::group(['middleware' => ('user_type:user')],function(){
-    Route::get('/home',[HomeController::class,'index']);
-    Route::post('/add_to_cart',[HomeController::class,'addTocart']);
+    Route::get('cart', [CartController::class, 'index']);
+    Route::post('cart', [CartController::class, 'add']);
+    Route::delete('cart/{itemId}', [CartController::class, 'remove']);
+    Route::get('orders', [OrderController::class, 'index']);
+    Route::post('orders/create', [OrderController::class, 'create']);
     Route::post('/like',[HomeController::class,'likeProduct']);
-    // Route::get('/offer',[HomeController::class,'showOffers']);
-    Route::get('/notifcation',[HomeController::class,'showNotifications']);
-    Route::get('/discount',[HomeController::class,'showDiscounts']);
-    Route::get('/weeklyoffers',[HomeController::class,'showWeeklyoffer']);
-    Route::get('/weeklyoffers',[HomeController::class,'showWeeklyoffer']);
-    Route::get('/latestproducts',[HomeController::class,'showLatestproducts']);
-    Route::get('/bestseller',[HomeController::class,'showBestseller']);
-    Route::get('/highstrate',[HomeController::class,'showhighstrate']);
-    Route::get('/recommended',[HomeController::class,'showrecommended']);
-
-});
-Route::group(['middleware' => ('user_type:user')],function(){
-    Route::get('/cart',[CartController::class,'index']);
-    Route::get('/cart',[CartController::class,'store']);
-    Route::get('/cart/{id}',[CartController::class,'show']);
-    Route::put('/cart/{id}',[CartController::class,'update']);
-    Route::delete('/cart/{id}',[CartController::class,'destroy']);
+    Route::get('/coupon',[HomeController::class,'showdiscounts']);
+    Route::post('/search',[HomeController::class,'search']);
 });
 
+Route::group([ 'prefix' => ('home')],function(){
+    Route::get('/',[HomeController::class,'index']);
+    Route::get('view_all_weekly_Offer',[HomeController::class,'viewAllWeeklyOffer']);
 
+});
+Route::group([ 'prefix' => ('aboutUs')],function(){
+    Route::get('/',[AboutUsController::class,'index']);
+    Route::get('/viewAllTeam',[AboutUsController::class,'viewAllMembers']);
+
+});
+Route::group([ 'prefix' => ('contactUs')],function(){
+    Route::get('/',[ContactUsController::class,'index']);
+    Route::post('/send',[ContactUsController::class,'send']);
+
+});
+Route::group([ 'prefix' => ('blogs')],function(){
+    Route::get('/',[BlogController::class,'index']);
+    Route::post('/readmore',[BlogController::class,'reedMore']);
+
+});
+Route::group([ 'prefix' => ('singleproduct')],function(){
+    Route::get('/{id}',[SingleProductController::class,'index']);
+    Route::post('/color',[SingleProductController::class,'color']);
+
+});

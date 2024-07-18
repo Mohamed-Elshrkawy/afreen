@@ -12,14 +12,16 @@ class Product extends Model implements TranslatableContract
 {
     use HasFactory, Translatable;
 
-    public $translatedAttributes = ['name', 'description','is_recommend'];
+    public $translatedAttributes = ['name', 'description'];
 
 
     protected $fillable = [
         'code',
         'images',
         'price',
+        'offer_price',
         'category_id',
+        'offer_id',
         'id'
     ];
 
@@ -42,4 +44,31 @@ class Product extends Model implements TranslatableContract
     {
         return $this->hasMany(ProductImage::class);
     }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+    public function offer()
+    {
+        return $this->belongsTo(Offer::class);
+    }
+
 }
+
+
+

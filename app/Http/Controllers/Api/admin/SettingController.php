@@ -5,10 +5,6 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SettingRequest;
 use App\Models\Setting;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-
-use Validator;
 
 class SettingController extends Controller
 {
@@ -19,10 +15,7 @@ class SettingController extends Controller
     }
     public function store(SettingRequest $request)
     {
-        $setting = Setting::create([
-            'about_ar' => $request->about_ar,
-            'about_en' => $request->about_en,
-        ]);
+        $setting = Setting::create($request->only('email','phone','address','about_ar','about_en'));
         return response()->json([
             'success' => true,
             'data' => $setting,
@@ -49,9 +42,7 @@ public function show(string $id)
 public function update(SettingRequest $request, $id)
 {
     $setting = Setting::find($id);
-    $setting->about_ar = $request->about_ar ;
-    $setting->about_en = $request->about_en ;
-    $setting->save();
+    $setting->update($request->only('email','phone','address','about_ar','about_en'));
 
     return response()->json([
         'success' => true,

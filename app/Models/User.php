@@ -64,28 +64,40 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
     public function reviews()
-{
-    return $this->hasMany(Review::class);
-}
+    {
+        return $this->hasMany(Review::class);
+    }
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+    public function coupon()
+    {
+        return $this->hasMany(Coupon::class);
+    }
+
 
 public function likes()
 {
     return $this->hasMany(Like::class);
 }
 
-public function orders()
-{
-    return $this->hasMany(Order::class);
-}
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 
 public function wallet()
 {
     return $this->hasOne(Wallet::class);
 }
 
-public function cart()
-{
-    return $this->hasOne(Cart::class);
-}
-
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+    public function address()
+    {
+        return $this->hasMany(Address::class);
+    }
 }

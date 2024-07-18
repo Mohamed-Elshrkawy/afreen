@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
-use App\Models\Size;
 use Illuminate\Http\Request;
 use App\Models\Product;
 
@@ -23,23 +22,23 @@ class ProductController extends Controller
             'ar'=>$request->ar,
             'price'=>$request->price,
             'code'=>$request->code,
-            'category_id'=>$request->category_id
+            'category_id'=>$request->category_id,
+            'offer_id'=>$request->offer_id
+
         ]);
- 
+        $product->total_price = $request->price + $product->offer_price;
+        $product->save();
+
         return new ProductResource($product);
     }
-    public function show(string $id)
+    public function show(Product $product)
     {
-        $product= Product::find($id);
-        if(!$product){
-            return response()->json("not found");
-        }
         return new ProductResource($product);
     }
 
-    public function update(ProductRequest $request, string $id)
+    public function update(ProductRequest $request, $id)
     {
-        $product =Product::find($id);
+        $product=Product::find($id);
         $product->update([
             'en'=>$request->en,
             'ar'=>$request->ar,
@@ -47,8 +46,14 @@ class ProductController extends Controller
             'code'=>$request->code,
             'category_id'=>$request->category_id
         ]);
+        if($request->offer_id)
+        {
+            $product->offer_price=$product->price*((100-$product->offer->discount_perecentage)/100);
+            $product->total_price = $request->price + $product->offer_price;
+            $product->save();
+        }
 
-        return ProductResource::collection($product);
+        return response()->json($product);
     }
     public function destroy(string $id)
     {

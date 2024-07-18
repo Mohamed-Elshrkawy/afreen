@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 
 
-class CategoryObserver
+class ReviewObserver
 {
     /**
      * Handle the Category "created" event.

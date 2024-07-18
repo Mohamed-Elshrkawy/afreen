@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Middleware;
+
 use Closure;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserType
 {
@@ -14,18 +16,14 @@ class UserType
      * @param  string  $type
      * @return mixed
      */
-    public function handle($request, Closure $next, $type)
+    public function handle(Request $request, Closure $next, $type)
     {
-        try {
-            $user = JWTAuth::parseToken()->authenticate();
-            if ($user->usertype !== $type) {
-                return response()->json(['error' => 'Unauthorized'], 401);
-            }
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        $user = Auth::user();
+
+        if ($user && $user->user_type === $type) {
+            return $next($request);
         }
 
-        return $next($request);
+        return response()->json(['error' => 'Unauthorized'], 403);
     }
 }
-

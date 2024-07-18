@@ -25,7 +25,7 @@ class OfferController extends Controller
     {
         $offer=offer::create([
             'discount_perecentage'=>$request->discount,
-            'product_id'=>$request->product_id
+
         ]);
         return response()->json([
             'message' => 'offer successfully create',

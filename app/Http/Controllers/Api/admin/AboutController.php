@@ -14,8 +14,12 @@ class AboutController extends Controller
      */
     public function index()
     {
-        $about =About::all();
-        return response()->json($about);
+        $feature = About::all();
+        return response()->json([
+            'message' => 'feature successfully ',
+            'data' => $feature
+        ], 200);
+
     }
 
     /**
@@ -23,10 +27,10 @@ class AboutController extends Controller
      */
     public function store(AboutRequest $request)
     {
+        // dd($request->all());
         $about = About::create([
-            'welcome'=>$request->welcome,
-            'head'=>$request->head,
-            'text'=>$request->text,
+            'en'=>$request->en,
+            'ar'=>$request->ar,
         ]);
         return response()->json($about);
     }
@@ -47,9 +51,8 @@ class AboutController extends Controller
     {
         $about = About::find($id);
         $about->update([
-            'welcome'=>$request->welcome,
-            'head'=>$request->head,
-            'text'=>$request->text,
+            'en'=>$request->en,
+            'ar'=>$request->ar,
         ]);
         return response()->json($about);
     }
