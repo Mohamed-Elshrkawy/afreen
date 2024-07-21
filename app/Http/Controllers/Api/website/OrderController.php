@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\website;
 
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
 
 use App\Models\Product;
@@ -21,17 +22,29 @@ class OrderController extends Controller
     {
         $order = Auth::user()->orders()->create();
 // try , catch , begin transaction
-        foreach ($request->items as $item) {
-            $product=Product::where('id','product_id')->get();
+try {
+    $totalPrice = 0;
+    foreach ($request->items as $item) {
+        $product = Product::find($item['product_id']);
+
+        if ($product) {
             $price = $product->offer_price * $item['quantity'];
-            $product = Product::find($item['product_id']);
+            $totalPrice += $price;
+
             $order->items()->create([
                 'product_id' => $item['product_id'],
                 'quantity' => $item['quantity'],
             ]);
+        } else {
+            throw new Exception("Product with ID {$item['product_id']} not found.");
         }
-        $order->total_price = $price;
-        $order->save();
+    }
+    $order->total_price = $totalPrice;
+    $order->save();
+} catch (Exception $e) {
+    return response()->json(['error' => $e->getMessage()], 500);
+}
+
 
         return response()->json($order->load('items.product'));
     }

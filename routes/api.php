@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\VerificationController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
 
 use App\Http\Controllers\Api\Admin\AboutController;
 use App\Http\Controllers\Api\Admin\OfferController;
@@ -40,21 +43,16 @@ use App\Http\Controllers\Api\website\AddressController;
 */
 
 
-Route::get('profile',[ProfileController::class, 'index']);
-Route::post('profile',[ProfileController::class, 'create']);
-Route::get('myordercurrent',[ProfileController::class, 'current']);
-Route::get('myordercompleted',[ProfileController::class, 'completed']);
-Route::get('myordercanceled',[ProfileController::class, 'canceled']);
-Route::get('mywallet',[ProfileController::class,'myWallet']);
-Route::get('myfavorite',[ProfileController::class,'myFavorite']);
-Route::apiResource('address', AddressController::class);
+
 
 Route::group(['prefix' => 'auth'],function () {
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/refresh', [AuthController::class, 'refresh']);
-    Route::get('/user-profile', [AuthController::class, 'userProfile']);
+    Route::post('login', [LoginController::class, 'login']);
+    Route::post('register', [RegisterController::class, 'register']);
+    Route::post('emailVerification', [VerificationController::class, 'emailVerification']);
+    Route::post('/logout', [LoginController::class, 'logout']);
+    Route::post('/refresh', [LoginController::class, 'refresh']);
+    Route::post('/forgetPassword', [ResetPasswordController::class, 'forgetPassword']);
+    Route::post('/resetPassword', [ResetPasswordController::class, 'resetPassword']);
 });
 
 Route::group([ 'middleware' => ('user_type:admin')],function(){
@@ -82,6 +80,14 @@ Route::group(['middleware' => ('user_type:user')],function(){
     Route::post('/like',[HomeController::class,'likeProduct']);
     Route::get('/coupon',[HomeController::class,'showdiscounts']);
     Route::post('/search',[HomeController::class,'search']);
+    Route::get('profile',[ProfileController::class, 'index']);
+    Route::post('profile',[ProfileController::class, 'create']);
+    Route::get('myordercurrent',[ProfileController::class, 'current']);
+    Route::get('myordercompleted',[ProfileController::class, 'completed']);
+    Route::get('myordercanceled',[ProfileController::class, 'canceled']);
+    Route::get('mywallet',[ProfileController::class,'myWallet']);
+    Route::get('myfavorite',[ProfileController::class,'myFavorite']);
+    Route::apiResource('address', AddressController::class);
 });
 
 Route::group([ 'prefix' => ('home')],function(){
